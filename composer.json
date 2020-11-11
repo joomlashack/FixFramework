@@ -1,0 +1,16 @@
+{
+    "name"             : "joomlashack/fixframework",
+    "description"      : "Fix Joomlashack Framework",
+    "minimum-stability": "stable",
+    "license"          : "GPL-2+",
+    "type"             : "library",
+    "authors"          : [
+        {
+            "name" : "Joomlashack",
+            "email": "help@joomlashack.com"
+        }
+    ],
+    "require"          : {
+        "php"       : ">= 5.6"
+    }
+}
