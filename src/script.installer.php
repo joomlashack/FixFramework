@@ -258,6 +258,7 @@ class PlgsystemfixframeworkInstallerScript
                 $installer = new Joomla\CMS\Installer\Installer();
                 if ($installer->install($sourceDir)) {
                     $message .= '[OK]';
+                    $this->app->enqueueMessage('Reinstalling the library was successful.');
                 }
 
             } else {
