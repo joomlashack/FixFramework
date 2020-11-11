@@ -16,6 +16,7 @@ If you experience the `AllediaFramework Not Found` or `Joomlashack Framework Not
 on your site, and you are still able to access your site admin, this extension may solve the
 problem and reinstall the framework.
 
-All you need to do is download the zip file for this repository and install it using the Joomla
-Extension Manager. It will provide messages on what it attempted to do. In particular, if all went
-well, you should see the message `Reinstalling the library was successful.` 
+All you need to do is [download the zip file](https://github.com/joomlashack/FixFramework/archive/main.zip)
+for this repository and install it using the Joomla Extension Manager. It will provide messages
+on what it attempted to do. In particular, if all went well, you should see the message
+`Reinstalling the library was successful.` 
