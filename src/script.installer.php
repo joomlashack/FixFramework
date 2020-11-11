@@ -107,16 +107,23 @@ class PlgsystemfixframeworkInstallerScript
         if ($id) {
             $message = 'Attempting standard uninstall ';
 
-            /** @var InstallerModelManage $model */
-            $model = BaseDatabaseModel::getInstance('Manage', 'InstallerModel');
-            if ($model->remove([$id])) {
-                $message .= '[OK]';
+            try {
+                /** @var InstallerModelManage $model */
+                $model = BaseDatabaseModel::getInstance('Manage', 'InstallerModel');
+                if ($model->remove([$id])) {
+                    $message .= '[OK]';
 
-            } else {
-                $this->sendMessage(join('<br>', $model->getErrors()));
+                } else {
+                    $this->sendMessage(join('<br>', $model->getErrors()));
 
-                $message .= '[FAIL]';
-                $success = false;
+                    $message .= '[FAIL]';
+                    $success = false;
+                }
+
+            } catch (Exception $error) {
+                // later
+            } catch (Throwable $error) {
+                // later
             }
 
         } else {
