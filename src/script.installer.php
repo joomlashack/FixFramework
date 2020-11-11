@@ -300,6 +300,8 @@ class PlgsystemfixframeworkInstallerScript
                 }
                 $filesAffected++;
             }
+
+            rmdir($path);
         }
 
         return $filesAffected;
