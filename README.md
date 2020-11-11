@@ -20,3 +20,6 @@ All you need to do is [download the zip file](https://github.com/joomlashack/Fix
 for this repository and install it using the Joomla Extension Manager. It will provide messages
 on what it attempted to do. In particular, if all went well, you should see the message
 `Reinstalling the library was successful.` 
+
+Important Note: This plugin does not install itself. You will see ominous messages about the install
+failing. This is expected and nothing to worry about.
