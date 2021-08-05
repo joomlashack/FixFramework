@@ -7,8 +7,8 @@
     <copyright>Copyright 2020 Joomlashack.com</copyright>
     <license>GNU GPL; see LICENSE file</license>
     <description>Fix problems with corrupted JoomlashackFramework/AllediaFramework</description>
-    <version>1.0.0</version>
-    <creationDate>November 11 2020</creationDate>
+    <version>1.0.1</version>
+    <creationDate>August 5, 2021</creationDate>
 
     <files>
         <filename plugin="fixframework">fixframework.php</filename>
