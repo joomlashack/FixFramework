@@ -219,7 +219,9 @@ class PlgsystemfixframeworkInstallerScript
         try {
             libxml_use_internal_errors(true);
 
-            $updateManifest = simplexml_load_string(file_get_contents($url));
+            $http = HttpFactory::getHttp();
+
+            $updateManifest = simplexml_load_string($http->get($url)->body);
             $errors         = libxml_get_errors();
             libxml_clear_errors();
             if ($errors) {
