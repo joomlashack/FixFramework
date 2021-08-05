@@ -1,4 +1,4 @@
-[![Joomlashack](https://www.joomlashack.com/images/logo_circle.png)](https://www.joomlashack.com)
+[![Joomlashack](https://www.joomlashack.com/images/logo_circle_small.png)](https://www.joomlashack.com)
 
 Fix Framework
 =============
