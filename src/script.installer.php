@@ -21,9 +21,11 @@
  * along with FixFramework.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Joomla\Archive\Archive;
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Installer\Adapter\PluginAdapter;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
@@ -46,22 +48,23 @@ class PlgsystemfixframeworkInstallerScript
     protected $app = null;
 
     /**
-     * @var bool
-     */
-    protected $reinstall = false;
-
-    /**
      * PlgsystemfixframeworkInstallerScript constructor.
      *
      * @param PluginAdapter $parent
+     *
+     * @return void
+     * @throws Exception
      */
-    public function __construct($parent)
+    public function __construct(PluginAdapter $parent)
     {
         $this->installer = $parent->getParent();
         $this->app       = Factory::getApplication();
     }
 
-    public function preflight()
+    /**
+     * @return bool
+     */
+    public function preflight(): bool
     {
         $this->sendMessage(
             '<h3>Please Note</h3>'
@@ -69,7 +72,8 @@ class PlgsystemfixframeworkInstallerScript
             . 'It will attempt to correct problems with the Joomlashack Framework.</p>'
         );
 
-        if ($this->clearDatabase()
+        if (
+            $this->clearDatabase()
             && $this->clearFolder()
         ) {
             $this->reinstall();
@@ -81,6 +85,11 @@ class PlgsystemfixframeworkInstallerScript
         return false;
     }
 
+    /**
+     * @param string $text
+     *
+     * @return void
+     */
     protected function sendMessage($text)
     {
         $this->app->enqueueMessage($text, 'notice');
@@ -89,7 +98,7 @@ class PlgsystemfixframeworkInstallerScript
     /**
      * @return bool
      */
-    protected function clearDatabase()
+    protected function clearDatabase(): bool
     {
         $success = true;
 
@@ -120,8 +129,6 @@ class PlgsystemfixframeworkInstallerScript
                     $success = false;
                 }
 
-            } catch (Exception $error) {
-                // later
             } catch (Throwable $error) {
                 // later
             }
@@ -139,11 +146,11 @@ class PlgsystemfixframeworkInstallerScript
     }
 
     /**
-     * @param $id
+     * @param ?int $id
      *
      * @return bool
      */
-    protected function removeManual($id)
+    protected function removeManual(?int $id): bool
     {
         $success = true;
 
@@ -176,12 +183,8 @@ class PlgsystemfixframeworkInstallerScript
      *
      * @return bool
      */
-    protected function clearFolder()
+    protected function clearFolder(): bool
     {
-        /**
-         * @var SplFileInfo[] $files
-         */
-
         $success = true;
 
         $path = JPATH_LIBRARIES . '/allediaframework';
@@ -189,15 +192,12 @@ class PlgsystemfixframeworkInstallerScript
             $message = 'Removing Framework library files ';
 
             try {
-                $itemsDeleted = $this->removeFolder($path);
+                $success = (bool)$this->removeFolder($path);
 
-            } catch (Exception $error) {
-                // later
             } catch (Throwable $error) {
-                // Later
+                $success = false;
             }
 
-            $success = empty($error) && $itemsDeleted;
             $message .= $success ? '[OK]' : '[FAIL]';
 
         } else {
@@ -210,9 +210,9 @@ class PlgsystemfixframeworkInstallerScript
     }
 
     /**
-     * @return string
+     * @return ?string
      */
-    protected function getDownloadUrl()
+    protected function getDownloadUrl(): ?string
     {
         $url = 'https://deploy.ostraining.com/client/update/free/stable/lib_allediaframework';
 
@@ -229,15 +229,10 @@ class PlgsystemfixframeworkInstallerScript
             }
 
             $url = $updateManifest->xpath('//downloads/downloadurl');
+
             return (string)array_shift($url);
 
-        } catch (Exception $error) {
-            // Later
         } catch (Throwable $error) {
-            // later
-        }
-
-        if (!empty($error)) {
             $this->sendMessage('Unable to find download url for Framework');
             $this->sendMessage($error);
         }
@@ -245,6 +240,9 @@ class PlgsystemfixframeworkInstallerScript
         return null;
     }
 
+    /**
+     * @return void
+     */
     protected function reinstall()
     {
         $message = 'Attempting to reinstall Framework ';
@@ -262,7 +260,7 @@ class PlgsystemfixframeworkInstallerScript
         }
 
         if (File::write($zipFile, file_get_contents($url))) {
-            $archive = new \Joomla\Archive\Archive();
+            $archive = new Archive();
             if ($archive->extract($zipFile, $sourceDir)) {
                 $installer = new Joomla\CMS\Installer\Installer();
                 if ($installer->install($sourceDir)) {
@@ -289,16 +287,16 @@ class PlgsystemfixframeworkInstallerScript
     }
 
     /**
-     * @param string $path
+     * @param ?string $path
      *
      * @return int
      */
-    protected function removeFolder($path)
+    protected function removeFolder(?string $path): int
     {
         $filesAffected = 0;
 
-        if (is_dir($path)) {
-            $dir   = new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS);
+        if ($path && is_dir($path)) {
+            $dir   = new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS);
             $files = new RecursiveIteratorIterator($dir, RecursiveIteratorIterator::CHILD_FIRST);
             foreach ($files as $file) {
                 if ($file->isDir()) {
